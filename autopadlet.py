@@ -65,9 +65,11 @@ def initialisation(whatsapplink, discussionname, padletlink, commands, lastcomma
 
     #Reglage des options de chrome
     coptions = webdriver.ChromeOptions()
+    #(Ligne suivante): Remplacer les chemin (c.f. README)
     coptions.add_argument("--user-data-dir=/home/pi/Desktop/Projet_Transfert_Auto_Padlet/chromedata")
 
     #Ouverture de whatsapp web et navigetion jusqu'a la discussion choisie
+    #(Ligne suivante): Remplacer les chemin (c.f. README)
     whatsappdriver = selenium.webdriver.Chrome(executable_path="/usr/lib/chromium-browser/chromedriver", options=coptions)
     whatsappdriver.get(whatsapplink)
     time.sleep(5)
@@ -75,6 +77,7 @@ def initialisation(whatsapplink, discussionname, padletlink, commands, lastcomma
     whatsappweb.opendiscussion(discussionname, wait)
 
     #Ouverture du padlet
+    #(Ligne suivante): Remplacer les chemin (c.f. README)
     padletdriver = selenium.webdriver.Chrome(os.path.expanduser("/usr/lib/chromium-browser/chromedriver"))
     padletdriver.get(padletlink)
     commands, newcommandsfound, lastcommands = whatsappweb.findnewmessagesforcommands(whatsappdriver, commands, lastcommands, normmsgdiv)

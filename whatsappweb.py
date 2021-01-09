@@ -102,11 +102,9 @@ def executecommands(commandtexts, commandindexes):
         elif "syntaxe" in commandtexts[i] or "transfert" in commandtexts[i]:
             reply = "Afin qu'une photo soit transférée, suivez les instructions qui suivent: 1. Choisissez la photo a mettre sur whatsapp 2. Dans la description de la photo, écrivez en respectant la syntaxe: !padlet {Code correspondant a la catégorie dans le padlet (envoyer la commande \"!padlet liste catégories' pour avoir la liste des catégories)} {Titre a donner a l'image} ; {description a donner a l'image}\" (remplacer le texte dans les {} par ce qu'il faut et ne recopiez pas les {}) Exemple: !padlet C1EX Titre de l'image;Description de l'image"
         elif "liste catégories" in commandtexts[i]:
-            reply = "Bonjour, voici la liste des catégories dans le padlet: [DS, DM et interros: code = DSDM],[Progression Prévue: code = PP],[Chapitre {nombre du chapitre} cours: code = C{nombre du chapitre}C (ex: cours chapitre 1: code = C1C)],[[Chapitre {nombre du chapitre} exercices: code = C{nombre du chapitre}EX (ex: exercices chapitre 1: code = C1EX)]"
-            #reply = "Autopadlet: Bonjour, voici la liste des catégories dans le padlet: C1, C2, C3, C4"
+            reply = "Autopadlet: Bonjour, voici la liste des catégories dans le padlet: C1, C2, C3, C4"
         elif "lien padlet" in commandtexts[i]:
-            reply = "Bonjour, voici le lien vers le padlet: https://padlet.com/julietierno/ksuy76z8oopbxk7e"
-            #reply = "Autopadlet: Bonjour, voici le lien vers le padlet: https://padlet.com/thilochalas/bz3zhbzqmuzhd1qm"
+            reply = "Autopadlet: Bonjour, voici le lien vers le padlet: https://padlet.com/thilochalas/bz3zhbzqmuzhd1qm"
         elif "kill_autopadlet" in commandtexts[i]:
             reply = "(!padlet kill) Autopadlet: Killing the autopadlet process"
         elif "statut" in commandtexts[i]:

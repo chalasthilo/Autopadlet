@@ -1,4 +1,4 @@
-#Librairies
+#Importation des Librairies
 import selenium
 from selenium.webdriver.common.keys import Keys
 import time
@@ -6,6 +6,7 @@ import os
 import csvReader
 import pyautogui
 
+#Fonction pour extraire les categories associees aux messages contenant les images
 def setimagecategories(messagetexts, padletsends, categories, catcodes, catids):
     categorized = []
     for i in padletsends:
@@ -18,6 +19,7 @@ def setimagecategories(messagetexts, padletsends, categories, catcodes, catids):
             categorized.append({'category_name': "Codenotfound error", 'category_id': "ERR", 'message_id': i})
     return categorized
 
+#Extraction des donnees relatives au message avec l'image
 def setmessagedata(messages, categorized, messagetexts, messagetimes, catcodes):
     messagesdata = []
     for message in categorized:
@@ -38,6 +40,7 @@ def setmessagedata(messages, categorized, messagetexts, messagetimes, catcodes):
         messagesdata.append({"category_name": message["category_name"], "category_id": message["category_id"], "message": messages[message["message_id"]], "Title": text[0], "Description": text[1], "Time": messagetimes[message["message_id"]]})
     return messagesdata
 
+#Ajout de l'image sur le padlet
 def postonpadlet(messagedata, padletdriver):
     downloads = os.listdir("/home/pi/Downloads/")
     for name in downloads:
@@ -80,12 +83,14 @@ def postonpadlet(messagedata, padletdriver):
     os.system("rm -r /home/pi/Downloads/WhatsApp*")
     #padletdriver.click()
 
+#Verification pour savoir si une image a deja etee ajoutee sur le padlet
 def checkuploads(message, uploadedimages):
-    messagetocheck = message["category_name"] + message["Title"] + message["Description"]
+    messagetocheck = message["category_name"] + message["Title"] + message["Description"] + message["Time"]
     for upload in uploadedimages:
         if upload["uploaddata"] == messagetocheck:
             return False
     return True
 
+#Sauvegarde des images deja transferees sur un fichier csv
 def updateuploadlog(uploadlog):
     csvReader.exportCSV(uploadlog,"uploadedimages.csv")

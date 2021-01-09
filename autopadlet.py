@@ -1,31 +1,30 @@
-#Librairies
-#selenium
+"""Ceci est le code principal d'autopadlet a executer dans le terminal. Veuillez vous 
+referer au readme du repositoire github pour plus d'informations (https://github.com/chalasthilo/Autopadlet)"""
+#Importation des Librairies et elements associes
+#Selenium
 import selenium
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-#other
+#Autres
 import os
 import time
 import pyautogui
-#custom
+#Custom
 import whatsappweb
 import padlet
 import csvReader
 
-#Page links
+#Liens vers les pages internet
 whatsapplink = "https://web.whatsapp.com/"
-#padletlink = "https://padlet.com/thilochalas/bz3zhbzqmuzhd1qm"
-padletlink = "https://padlet.com/julietierno/ksuy76z8oopbxk7e"
+padletlink = "https://padlet.com/thilochalas/bz3zhbzqmuzhd1qm"
 
-#Discussion name
-#discussionname = '"Mainaccount"'
-discussionname = '"Maths expertes Tle"'
-#discussionname = '"Existance Muy Caliente"'
+#Nom de la discussion whatsapp
+discussionname = '"Mainaccount"'
 
-#Whatsapp message reading
+#Variables servant a la lecture des messages dans whatsapp web
 messages = []
 lastmessages = []
 newmessagefound = False
@@ -34,7 +33,7 @@ commands = []
 lastcommands = []
 newcommandsfound = False
 
-#div names
+#Noms des classes des .div de whatsapp web
 internetstatusdiv = "div." + "pcVTC" 
 imgmsgdiv = "div." + "j9c-4" 
 imgpicdiv = "div." + "_1mTER" 
@@ -44,52 +43,59 @@ msginputfield = "div." + "_1awRl"
 normmsgdiv = "div." + "_2tbXF" 
 msgtimespan = "span." + "_2JNr-"
 
-#Padlet categories
-#categories = ["First column", "second column", "third", "fourth"]
-#catcodes = ["C1", "C2", "C3", "C4"]
-#catids = ["section-41504012", "section-41504018", "section-41504020", "section-41504022"]
+#Categories du padlet
+categories = ["First column", "second column", "third", "fourth"]
+catcodes = ["C1", "C2", "C3", "C4"]
+catids = ["section-41504012", "section-41504018", "section-41504020", "section-41504022"]
 
-categories = ["DS,DM,Interros", "Progression Prevue", "Chapitre 1 Cours", "Chapitre 2 Cours", "Chapitre 3 Cours", "Chapitre 4 Cours", "Chapitre 5 Cours", "Chapitre 6 Cours", "Chapitre 7 Cours", "Chapitre 1 Exercices", "Chapitre 2 Exercices", "Chapitre 3 Exercices", "Chapitre 4 Exercices", "Chapitre 5 Exercices", "Chapitre 6 Exercices", "Chapitre 7 Exercices"]
-catcodes = ["DSDM", "PP", "C1C", "C2C", "C3C", "C4C", "C5C", "C6C", "C7C", 'C1EX', 'C2EX', 'C3EX', 'C4EX', 'C5EX', 'C6EX', 'C7EX']
-catids = ["section-40996450", "section-41017892", "section-40996545", "section-4096706", "section-40996607", "section-40996788", "section-40997070", "section-40996932", "section-40997157", "section-40996563", "section-40996739", "section-40996630", "section-40996816", "section-40997097", "section-40996954", "section-40997172"]
-
-#other
+#Autres
 killtaskrequested = False
 recoveredcrashes = 0
 
-
+#Fonction servant a demarrer et initialiser les pages web...
 def initialisation(whatsapplink, discussionname, padletlink, commands, lastcommands):
-    #Opening upload log
+    #Ouverture de la liste des images deja envoyees sur le padlet
     uploadlog = csvReader.importCSV("uploadedimages.csv")
 
-    #fetching chrome profile
+    #Recuperation du profil chrome
+    #(Ligne suivante): Remplacer le chemin (c.f. README)
     os.system("rm -r /home/pi/Desktop/Projet_Transfert_Auto_Padlet/chromedata/Default")
+    #(Ligne suivante): Remplacer les chemin (c.f. README)
     os.system("cp -r /home/pi/.config/chromium/Default /home/pi/Desktop/Projet_Transfert_Auto_Padlet/chromedata")
 
-    #setting chrome options
+    #Reglage des options de chrome
     coptions = webdriver.ChromeOptions()
     coptions.add_argument("--user-data-dir=/home/pi/Desktop/Projet_Transfert_Auto_Padlet/chromedata")
-    #Opening whatsapp and navigating to discussion
+
+    #Ouverture de whatsapp web et navigetion jusqu'a la discussion choisie
     whatsappdriver = selenium.webdriver.Chrome(executable_path="/usr/lib/chromium-browser/chromedriver", options=coptions)
     whatsappdriver.get(whatsapplink)
     time.sleep(5)
     wait = WebDriverWait(whatsappdriver, 600)
     whatsappweb.opendiscussion(discussionname, wait)
-    #Opening padlet
+
+    #Ouverture du padlet
     padletdriver = selenium.webdriver.Chrome(os.path.expanduser("/usr/lib/chromium-browser/chromedriver"))
     padletdriver.get(padletlink)
     commands, newcommandsfound, lastcommands = whatsappweb.findnewmessagesforcommands(whatsappdriver, commands, lastcommands, normmsgdiv)
     return uploadlog,whatsappdriver,padletdriver,commands,newcommandsfound,lastcommands
 
+#Initialisation d'Autopadlet
 uploadlog,whatsappdriver,padletdriver,commands,newcommandsfound,lastcommands = initialisation(whatsapplink, discussionname, padletlink, commands, lastcommands)
 
 print("Enter loop")
+#Boucle principale d'Autopadlet
 while True :
+    #Le try/except sert ici pour la gestion des crashs pouvant se produire
     try:
-        #print("/////////////////////////////////////////////Detecting new messages/////////////////////////////////////////////")
+        #Recherche de noveaux messages comportant des images
         messages, newmessagefound, lastmessages = whatsappweb.findnewmessages(whatsappdriver, messages, lastmessages, imgmsgdiv)
+
+        #Instructions a executer si un nouveau message est arrive
         if newmessagefound and messages != []:
             print("New message(s) found") 
+            
+            #Traitement du message et extraction des informations
             newmessagefound = False
             messagetexts = whatsappweb.readmessagetext(messages)
             messagetimes = whatsappweb.findmessagetime(messages, msgtimespan)
@@ -97,9 +103,11 @@ while True :
             categorized = padlet.setimagecategories(messagetexts, padletsends, categories, catcodes, catids)
             messages_with_data = padlet.setmessagedata(messages, categorized, messagetexts, messagetimes, catcodes)
             print(messages_with_data)
-            for message in messages_with_data:
-                if message["category_id"] != "ERR":
-                    if padlet.checkuploads(message, uploadlog):
+
+            #Transfert de l'image sur le padlet
+            for message in messages_with_data: #On parcoure les messages detectes
+                if message["category_id"] != "ERR": #Verification pour savoir si le message a une categorie
+                    if padlet.checkuploads(message, uploadlog): #Verification pour ne pas envoyer une deuxieme fois la meme image sur le padlet
                         uploadlog.append({"uploaddata": (message["category_name"] + message["Title"] + message["Description"] + message["Time"])})
                         padlet.updateuploadlog(uploadlog)
                         whatsappweb.downloadimage(message["message"], whatsappdriver, imgpicdiv, actionbuttonsdiv)
@@ -107,17 +115,28 @@ while True :
                         whatsappweb.sendmessage(('''L'image"''' + message["Title"] + '" est sur le padlet'), whatsappdriver, msginputdiv, msginputfield)
                 else:
                     whatsappweb.sendmessage(("Erreur dans le code de catégorie padlet"), whatsappdriver, msginputdiv, msginputfield)      
-        #print("/////////////////////////////////////////////Detecting new commands/////////////////////////////////////////////")
+    
+
+        #Detection de nouveaux messages contenant des commandes
         commands, newcommandsfound, lastcommands = whatsappweb.findnewmessagesforcommands(whatsappdriver, commands, lastcommands, normmsgdiv)
+
+        #Instructions a executer si il y a de nouvelles commandes
         if newcommandsfound and commands != []:
             print("New commands found")
+
+            #Traitement de la commande et extraction des informations
             newcommandsfound = False
             commandtexts = whatsappweb.readmessagetext(commands)
             commandstoexecute = whatsappweb.findpadletsends(commandtexts)
             responses = whatsappweb.executecommands(commandtexts, commandstoexecute)
             commandtexts, commandstoexecute = [],[]
+
+            #Envoi des reponses a la commande
             for text in responses:
+                #Envoi de la reponse
                 whatsappweb.sendmessage(text, whatsappdriver, msginputdiv, msginputfield)
+
+                #Instructions si le killcode est active
                 if text == "Autopadlet: Killing the autopadlet process":
                     killtaskrequested = True
                     time.sleep(5)
@@ -127,14 +146,19 @@ while True :
                     quit()
                     exit()
                     break
+        
+
+        #Detection d'une perte de connexion internet
         try:
             internetloss = whatsappdriver.find_element_by_css_selector(internetstatusdiv)
             internetloss = internetloss.text
             if internetloss != "L'ordinateur n'est pas connecté":
                 raise Exception("Not lost")
             print("INTERNET: CONNEXION LOST")
+
+            #Attente du retour de la connexion internet
             while "pas connecté" in internetloss:
-                print("INTERNET: WAITING FOR RESPONSE")
+                #print("INTERNET: WAITING FOR RESPONSE")
                 time.sleep(1)
                 try:
                     internetloss = whatsappdriver.find_element_by_css_selector(internetstatusdiv)
@@ -148,8 +172,11 @@ while True :
             pass
         time.sleep(5)
     except:
+        #Quitter le programme si le killcode est active
         if killtaskrequested:
             quit()
+
+        #Retablissement automatique (en cas de crash)
         print("AUTOPADLET: FATAL ERROR OCCURED")
         print("AUTOPADLET: RESTARTING")
         for i in range(5):

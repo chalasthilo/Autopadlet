@@ -17,12 +17,13 @@ import csvReader
 
 #Page links
 whatsapplink = "https://web.whatsapp.com/"
-padletlink = "https://padlet.com/thilochalas/bz3zhbzqmuzhd1qm"
-#padletlink = "https://padlet.com/julietierno/ksuy76z8oopbxk7e"
+#padletlink = "https://padlet.com/thilochalas/bz3zhbzqmuzhd1qm"
+padletlink = "https://padlet.com/julietierno/ksuy76z8oopbxk7e"
 
 #Discussion name
-discussionname = '"Mainaccount"'
-#discussionname = '"Maths expertes Tle"'
+#discussionname = '"Mainaccount"'
+discussionname = '"Maths expertes Tle"'
+#discussionname = '"Existance Muy Caliente"'
 
 #Whatsapp message reading
 messages = []
@@ -41,15 +42,16 @@ actionbuttonsdiv = "div." + "_1RLgD"
 msginputdiv = "div." + "_2HE1Z" 
 msginputfield = "div." + "_1awRl" 
 normmsgdiv = "div." + "_2tbXF" 
+msgtimespan = "span." + "_2JNr-"
 
 #Padlet categories
-categories = ["First column", "second column", "third", "fourth"]
-catcodes = ["C1", "C2", "C3", "C4"]
-catids = ["section-41504012", "section-41504018", "section-41504020", "section-41504022"]
+#categories = ["First column", "second column", "third", "fourth"]
+#catcodes = ["C1", "C2", "C3", "C4"]
+#catids = ["section-41504012", "section-41504018", "section-41504020", "section-41504022"]
 
-#categories = ["DS,DM,Interros", "Progression Prevue", "Chapitre 1 Cours", "Chapitre 2 Cours", "Chapitre 3 Cours", "Chapitre 4 Cours", "Chapitre 5 Cours", "Chapitre 6 Cours", "Chapitre 7 Cours", "Chapitre 1 Exercices", "Chapitre 2 Exercices", "Chapitre 3 Exercices", "Chapitre 4 Exercices", "Chapitre 5 Exercices", "Chapitre 6 Exercices", "Chapitre 7 Exercices"]
-#catcodes = ["DSDM", "PP", "C1C", "C2C", "C3C", "C4C", "C5C", "C6C", "C7C", 'C1EX', 'C2EX', 'C3EX', 'C4EX', 'C5EX', 'C6EX', 'C7EX']
-#catids = ["section-40996450", "section-41017892", "section-40996545", "section-4096706", "section-40996607", "section-40996788", "section-40997070", "section-40996932", "section-40997157", "section-40996563", "section-40996739", "section-40996630", "section-40996816", "section-40997097", "section-40996954", "section-40997172"]
+categories = ["DS,DM,Interros", "Progression Prevue", "Chapitre 1 Cours", "Chapitre 2 Cours", "Chapitre 3 Cours", "Chapitre 4 Cours", "Chapitre 5 Cours", "Chapitre 6 Cours", "Chapitre 7 Cours", "Chapitre 1 Exercices", "Chapitre 2 Exercices", "Chapitre 3 Exercices", "Chapitre 4 Exercices", "Chapitre 5 Exercices", "Chapitre 6 Exercices", "Chapitre 7 Exercices"]
+catcodes = ["DSDM", "PP", "C1C", "C2C", "C3C", "C4C", "C5C", "C6C", "C7C", 'C1EX', 'C2EX', 'C3EX', 'C4EX', 'C5EX', 'C6EX', 'C7EX']
+catids = ["section-40996450", "section-41017892", "section-40996545", "section-4096706", "section-40996607", "section-40996788", "section-40997070", "section-40996932", "section-40997157", "section-40996563", "section-40996739", "section-40996630", "section-40996816", "section-40997097", "section-40996954", "section-40997172"]
 
 #other
 killtaskrequested = False
@@ -90,9 +92,7 @@ while True :
             print("New message(s) found") 
             newmessagefound = False
             messagetexts = whatsappweb.readmessagetext(messages)
-            print("Time")
-            messagetimes = whatsappweb.findmessagetime(messages)
-            print("Time found")
+            messagetimes = whatsappweb.findmessagetime(messages, msgtimespan)
             padletsends = whatsappweb.findpadletsends(messagetexts)
             categorized = padlet.setimagecategories(messagetexts, padletsends, categories, catcodes, catids)
             messages_with_data = padlet.setmessagedata(messages, categorized, messagetexts, messagetimes, catcodes)
@@ -104,9 +104,9 @@ while True :
                         padlet.updateuploadlog(uploadlog)
                         whatsappweb.downloadimage(message["message"], whatsappdriver, imgpicdiv, actionbuttonsdiv)
                         padlet.postonpadlet(message, padletdriver)
-                        whatsappweb.sendmessage(("Message Autopadlet: L'image" + message["Title"] + " a été mise sur padlet dans la categorie: "+message["category_name"]), whatsappdriver, msginputdiv, msginputfield)
+                        whatsappweb.sendmessage(('''L'image"''' + message["Title"] + '" est sur le padlet'), whatsappdriver, msginputdiv, msginputfield)
                 else:
-                    whatsappweb.sendmessage(("Message Autopadlet: Erreur dans le code de catégorie padlet"), whatsappdriver, msginputdiv, msginputfield)      
+                    whatsappweb.sendmessage(("Erreur dans le code de catégorie padlet"), whatsappdriver, msginputdiv, msginputfield)      
         #print("/////////////////////////////////////////////Detecting new commands/////////////////////////////////////////////")
         commands, newcommandsfound, lastcommands = whatsappweb.findnewmessagesforcommands(whatsappdriver, commands, lastcommands, normmsgdiv)
         if newcommandsfound and commands != []:
@@ -118,7 +118,7 @@ while True :
             commandtexts, commandstoexecute = [],[]
             for text in responses:
                 whatsappweb.sendmessage(text, whatsappdriver, msginputdiv, msginputfield)
-                if text == "(!padlet kill) Autopadlet: Killing the autopadlet process":
+                if text == "Autopadlet: Killing the autopadlet process":
                     killtaskrequested = True
                     time.sleep(5)
                     print("AUTOPADLET PROCESS TERMINATED")

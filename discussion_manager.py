@@ -45,7 +45,7 @@ def ajouter_discussions(discussions_a_ajouter):
     discussions = csvReader.importJSON("discussionswithpadlets.json")
     discussions += discussions_a_ajouter
     sauvegarder_discussions(discussions)
-def modifier_discussion(nomdiscussion, parametre, nouvelle_valeur):
+
     
 ###################################################################################################
 #mettre les fonctions ici

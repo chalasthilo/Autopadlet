@@ -3,7 +3,7 @@ On peut trouver ici le code source du projet autopadlet permettant de transferer
 
 !!!ATTENTION!!! Autopadlet est encore en cours de developpement. De plus, ce README est encore incomplet.
 
-Quelques informations par rapport au programme:
+## Quelques informations par rapport au programme:
 
 -Autopadlet necessite les librairies python selenium, time, os, pyautogui, json, csv, et sys pour fonctionner.
 
@@ -18,7 +18,7 @@ Quelques informations par rapport au programme:
 -Il est preferable d'executer l'algorithme sur un ordinateur n'etant pas utilise regulierement et ayant une connexion internet stable (j'utilise par exemple un raspberry pi que je n'utilise pas ou peu et sur lequel l'algorithme tourne 24h/24). L'algorithme est capable de gerer des pertes de connexion internet. Il faut aussi noter que whatsapp web a tendance a faire se vider plus rapidement la batterie du telephone auquel le compte whatsapp qui y est associe est connecte. On peut par exemple utiliser un vieux telephone ne servant plus sur lequel on cree un autre profil whatsapp (pas besoin d'un deuxieme abonnement telephonique, il suffit de "creer" un faux numero de telephone. Explications ici par exemple: https://sendapp.live/fr/2020/04/08/numero-virtuel-pour-activer-whatsapp/).
 
 
-Mise en place:
+## Mise en place:
 
 1. Telecharger autopadlet (tous les fichiers .py et .csv) dans un meme dossier, creer un dossier nomme "chromedata" dans le dossier ou vous avez mis les fichiers, et installer les librairies necessaires si besoin.
 
